@@ -71,7 +71,7 @@ export default function App(props) {
         //TODO: this should probably check if the server says the Event is active, and bail if not.
         //TODO: This should bail if the event is 0. That way it ignores initializing.
         if (scryGameData.eventNum != 0 && scryGameData.isActive == true) {
-            fetch("http://glooppi:3000/events/currentEvent/")
+            fetch("http://glooppi:3000/scryEvents/currentEvent/")
                 .then((res) => res.json())
                 .then((data) => {
                     setactiveEventData(data);
@@ -102,7 +102,7 @@ export default function App(props) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(outgoingData),
         };
-        fetch("http://glooppi:3000/events/currentEvent/", requestOptions)
+        fetch("http://glooppi:3000/scryEvents/currentEvent/", requestOptions)
             .then((res) => {
                 console.log(res.status); //TODO: turn this into actually warning when it was bad.
                 return res.json();
