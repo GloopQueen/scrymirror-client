@@ -1,12 +1,13 @@
 import React from "react";
 import MultiChoice from "./event_components/MultiChoice";
 import VitalPollBar from "./base_components/VitalPollBar";
+import JoinCodeBox from "./base_components/JoinCodeBox";
 
-const testArray = [
+/* const testArray = [
     { id: 1, name: "math" },
     { id: 2, name: "science" },
     { id: 3, name: "geology" },
-];
+    ];*/
 
 export default function App(props) {
     //////THE FUNCTION PARTY
@@ -21,15 +22,6 @@ export default function App(props) {
         });
         //console.log(theAnswerData);
     }
-    //Renders Event area beneath scoreboard. Future logic on different types of events will be in here
-    function renderEventArea() {
-        return (
-            <MultiChoice
-                data={activeEventData}
-                valueResponseFunction={sendAnswer}
-            />
-        );
-    }
 
     //////// MAMA'S HOME COOKED VARIABLES
     //
@@ -41,6 +33,9 @@ export default function App(props) {
     const [scryGameData, setScryGameData] = React.useState({
         eventNum: 0,
         isActive: false,
+        //joinCode: "LHYS78",
+        joinCode: "",
+        playerID: 0,
     });
     //
     //data about the current (running) event, basically the JSON event from the server is here
@@ -71,21 +66,31 @@ export default function App(props) {
         //TODO: this should probably check if the server says the Event is active, and bail if not.
         //TODO: This should bail if the event is 0. That way it ignores initializing.
         if (scryGameData.eventNum != 0 && scryGameData.isActive == true) {
-            fetch("http://glooppi:3000/scryEvents/currentEvent/")
+            fetch("http://glooppi:3000/scryGameData/", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    joinCode: props.joinCode,
+                    fullUpdate: true,
+                }),
+            })
                 .then((res) => res.json())
                 .then((data) => {
-                    setactiveEventData(data);
+                    setactiveEventData(data.currentEvent);
                     setisActiveEventAvailable(true);
                     setTheAnswerData({
                         ...theAnswerData,
                         eventNum: data.eventNum,
-                        verb: data.verb,
+                        verb: data.currentEvent.verb,
                         value: "",
                         sentStatus: "preparing",
                     });
                 });
         }
-    }, [scryGameData.eventNum]);
+    }, [scryGameData.eventNum, scryGameData.isActive]);
 
     // Post the Answer whenever sentStatus changes (if ready)
     React.useEffect(() => {
@@ -95,14 +100,15 @@ export default function App(props) {
         //setup outgoing words
 
         const outgoingData = theAnswerData;
+        theAnswerData.joinCode = scryGameData.joinCode;
         delete outgoingData.sentStatus;
 
         const requestOptions = {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(outgoingData),
         };
-        fetch("http://glooppi:3000/scryEvents/currentEvent/", requestOptions)
+        fetch("http://glooppi:3000/scryGameData/", requestOptions)
             .then((res) => {
                 console.log(res.status); //TODO: turn this into actually warning when it was bad.
                 return res.json();
@@ -112,13 +118,44 @@ export default function App(props) {
             });
     }, [theAnswerData.sentStatus]);
 
-    //oh hey it's the acual rendering code hi
-    return (
-        <>
+    //Renders Event area beneath scoreboard. Future logic on different types of events will be in here
+    function renderEventArea() {
+        return (
+            <MultiChoice
+                data={activeEventData}
+                valueResponseFunction={sendAnswer}
+            />
+        );
+    }
+
+    // The Poll Bar shows basic game info and also actually polls the server
+    function renderVitalPollBar() {
+        return (
             <VitalPollBar
                 masterGameDataObject={scryGameData}
                 setGameDataFunction={setScryGameData}
             />
+        );
+    }
+
+    function renderJoinCodeBox() {
+        return <JoinCodeBox />;
+    }
+
+    //Check if there's a join code
+    let isThereAJoinCode = false;
+    if (
+        Object.hasOwn(scryGameData, "joinCode") &&
+        scryGameData.joinCode.length > 0
+    ) {
+        isThereAJoinCode = true;
+    }
+
+    //Actual rendering code
+    return (
+        <>
+            {isThereAJoinCode ? renderVitalPollBar() : renderJoinCodeBox()}
+
             {isActiveEventAvailable && theAnswerData.sentStatus != "sent"
                 ? renderEventArea()
                 : null}

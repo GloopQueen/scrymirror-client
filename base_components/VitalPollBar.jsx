@@ -6,11 +6,27 @@ const VitalPollBar = (props) => {
     //contin
     useEffect(() => {
         const intervalId = setInterval(() => {
-            fetch("http://192.168.86.45:3000/scryGameData/")
+            fetch("http://192.168.86.45:3000/scryGameData/", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    joinCode: props.joinCode,
+                    fullUpdate: false,
+                }),
+            })
                 .then((res) => res.json())
                 .then((res) => {
-                    setData(res);
-                    props.setGameDataFunction(res);
+                    //Update the Game Data, make sure to carry over the joincode and playerID cuz otherwise itll get dropped
+                    const newGameData = {
+                        ...res,
+                        joinCode: props.masterGameDataObject.joinCode,
+                        playerID: props.masterGameDataObject.playerID,
+                    };
+                    setData(newGameData);
+                    props.setGameDataFunction(newGameData);
                 });
             //.then((data) => {
             //        setData(data);

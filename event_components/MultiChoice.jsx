@@ -6,7 +6,7 @@ export default function MultiChoice(props) {
         const formEl = event.currentTarget;
         const formData = new FormData(formEl);
         const eventChoice = formData.get("eventChoice");
-        console.log(eventChoice);
+        //console.log(eventChoice);
         if (eventChoice != null) {
             props.valueResponseFunction(eventChoice);
         }
