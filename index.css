@@ -16,6 +16,29 @@
     border-radius: 10px;
 }
 
+.JoinBox {
+    display: flex;
+    background-color: DodgerBlue;
+    font-family: sans-serif;
+}
+
+.JoinBox label {
+    background-color: #f1f1f1;
+    margin: 6px;
+    padding: 5px;
+    font-size: 15px;
+    border-radius: 10px;
+}
+
+.JoinBox button {
+    background-color: #f1f1f1;
+    margin: 6px;
+    padding: 5px;
+    font-size: 15px;
+    border-radius: 10px;
+    width: 70px;
+}
+
 .MultiChoice {
     display: flex;
     flex-direction: column;

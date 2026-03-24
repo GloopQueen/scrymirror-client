@@ -25,7 +25,12 @@ export default function App(props) {
 
     //////// MAMA'S HOME COOKED VARIABLES
     //
-    //
+
+    //get the server URL
+    const [scryServerURL, setScryServerURL] = React.useState(
+        import.meta.env.VITE_SCRY_URL,
+    );
+
     //Data from the scryGameData endpoint. This is polled regularly and kicks off pretty much everything else.
     //
     //Crucially, there's an event number in here which kicks off grabbing the full Event.
@@ -36,6 +41,7 @@ export default function App(props) {
         //joinCode: "LHYS78",
         joinCode: "",
         playerID: 0,
+        gameOwnerName: "",
     });
     //
     //data about the current (running) event, basically the JSON event from the server is here
@@ -66,7 +72,7 @@ export default function App(props) {
         //TODO: this should probably check if the server says the Event is active, and bail if not.
         //TODO: This should bail if the event is 0. That way it ignores initializing.
         if (scryGameData.eventNum != 0 && scryGameData.isActive == true) {
-            fetch("http://glooppi:3000/scryGameData/", {
+            fetch(scryServerURL + "scryGameData/", {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -134,12 +140,19 @@ export default function App(props) {
             <VitalPollBar
                 masterGameDataObject={scryGameData}
                 setGameDataFunction={setScryGameData}
+                urlStart={scryServerURL}
             />
         );
     }
 
     function renderJoinCodeBox() {
-        return <JoinCodeBox />;
+        return (
+            <JoinCodeBox
+                masterGameDataObject={scryGameData}
+                setGameDataFunction={setScryGameData}
+                urlStart={scryServerURL}
+            />
+        );
     }
 
     //Check if there's a join code
@@ -159,9 +172,9 @@ export default function App(props) {
             {isActiveEventAvailable && theAnswerData.sentStatus != "sent"
                 ? renderEventArea()
                 : null}
-            <div>
+            {/*<div>
                 <pre>{JSON.stringify(activeEventData, null, 2)}</pre>
-            </div>
+            </div>*/}
         </>
     );
 }

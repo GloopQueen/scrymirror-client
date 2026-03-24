@@ -11,7 +11,7 @@ export default function JoinCodeBox(props) {
         const formEl = event.currentTarget;
         const formData = new FormData(formEl);
         const typedCode = formData.get("code");
-        console.log(typedCode);
+        //console.log(typedCode);
         setCodeToTry(typedCode);
     }
 
@@ -20,17 +20,38 @@ export default function JoinCodeBox(props) {
         if (codeToTry == null) {
             return;
         }
-        fetch("http://192.168.86.45:3000/scryGameData/", {
+        isLoading = true;
+        //console.log(props.urlStart);
+        fetch(props.urlStart + "scryGameData/", {
             method: "POST",
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                joinCode: props.joinCode,
+                joinCode: codeToTry,
                 fullUpdate: false,
             }),
-        });
+        })
+            .then((res) => res.json())
+            .then((res) => {
+                isLoading = false;
+                console.log(res);
+                //Check if a Game Owner name got returned and assume that means a valid game is running.
+                if (Object.hasOwn(res, "gameOwnerName")) {
+                    //console.log(res.gameOwnerName);
+                    const newRandomPlayerID = Math.floor(
+                        Math.random() * 100000,
+                    );
+                    const newGameData = {
+                        ...props.masterGameDataObject,
+                        playerID: newRandomPlayerID,
+                        gameOwnerName: res.gameOwnerName,
+                        joinCode: codeToTry,
+                    };
+                    props.setGameDataFunction(newGameData);
+                }
+            });
     }, [codeToTry]);
 
     return (
@@ -40,7 +61,7 @@ export default function JoinCodeBox(props) {
                     <label>
                         Enter Join Code: <input name="code" />
                     </label>
-                    <button>Send</button>
+                    <button disabled={isLoading}>Send</button>
                 </div>
             </form>
         </>

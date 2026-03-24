@@ -6,7 +6,7 @@ const VitalPollBar = (props) => {
     //contin
     useEffect(() => {
         const intervalId = setInterval(() => {
-            fetch("http://192.168.86.45:3000/scryGameData/", {
+            fetch(props.urlStart + "scryGameData/", {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -24,6 +24,7 @@ const VitalPollBar = (props) => {
                         ...res,
                         joinCode: props.masterGameDataObject.joinCode,
                         playerID: props.masterGameDataObject.playerID,
+                        gameOwnerName: props.masterGameDataObject.gameOwnerName,
                     };
                     setData(newGameData);
                     props.setGameDataFunction(newGameData);
@@ -38,6 +39,7 @@ const VitalPollBar = (props) => {
 
     return (
         <div className="VitalPollBar">
+            <div>Your Host: {props.masterGameDataObject.gameOwnerName}</div>
             <div>Event Number: {props.masterGameDataObject.eventNum}</div>
             <div>
                 Event Active?{" "}
