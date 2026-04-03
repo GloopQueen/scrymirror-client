@@ -79,3 +79,8 @@
     min-width: 400px;
     max-width: 800px;
 }
+
+.MultiChoice p {
+    color: wheat;
+    align-self: center;
+}
