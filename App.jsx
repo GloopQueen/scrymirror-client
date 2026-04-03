@@ -1,7 +1,15 @@
 import React from "react";
+import MultiMulti from "./event_components/MultiMulti";
 import MultiChoice from "./event_components/MultiChoice";
-import VitalPollBar from "./base_components/VitalPollBar";
+import ScoreBoard from "./base_components/ScoreBoard";
 import JoinCodeBox from "./base_components/JoinCodeBox";
+import {
+    QueryClientProvider,
+    QueryClient,
+    useQuery,
+} from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 /* const testArray = [
     { id: 1, name: "math" },
@@ -124,20 +132,80 @@ export default function App(props) {
             });
     }, [theAnswerData.sentStatus]);
 
-    //Renders Event area beneath scoreboard. Future logic on different types of events will be in here
-    function renderEventArea() {
-        return (
-            <MultiChoice
-                data={activeEventData}
-                valueResponseFunction={sendAnswer}
-            />
-        );
+    //Check if there's a valid join code from the Join Code Entry Box
+    //Used to determine if we should start polling & show the general UI later
+    let isThereAJoinCode = false;
+    if (
+        Object.hasOwn(scryGameData, "joinCode") &&
+        scryGameData.joinCode.length > 0
+    ) {
+        isThereAJoinCode = true;
     }
 
-    // The Poll Bar shows basic game info and also actually polls the server
-    function renderVitalPollBar() {
+    //The polling code: Should bail at first and only run once a valid join code gets set
+    /*React.useEffect(() => {
+        const intervalId = setInterval(() => {
+            //console.log("check!");
+            if (scryGameData.joinCode == "") {
+                return;
+            }
+            fetch(scryServerURL + "scryGameData/", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    joinCode: scryGameData.joinCode,
+                    fullUpdate: false,
+                }),
+            })
+                .then((res) => res.json())
+                .then((res) => {
+                    //Check if it's actually new. I was spamming setting the state oops
+                    //console.log("in the loop data:");
+                    //console.log(res);
+                    const newGameData = {
+                        ...res,
+                        joinCode: scryGameData.joinCode,
+                        playerID: scryGameData.playerID,
+                        gameOwnerName: scryGameData.gameOwnerName,
+                    };
+                    console.log(newGameData);
+                    setScryGameData(newGameData);
+                });
+            //.then((data) => {
+            //        setData(data);
+            //   });
+        }, 3000); // poll every 5 seconds
+
+        return () => clearInterval(intervalId); // cleanup on unmount
+    }, [scryGameData.joinCode]);*/
+
+    //Renders Event area beneath scoreboard. Future logic on different types of events will be in here
+    function renderEventArea() {
+        if (activeEventData.type == "multiChoice") {
+            return (
+                <MultiChoice
+                    data={activeEventData}
+                    valueResponseFunction={sendAnswer}
+                />
+            );
+        }
+        if (activeEventData.type == "multiMulti") {
+            return (
+                <MultiMulti
+                    data={activeEventData}
+                    valueResponseFunction={sendAnswer}
+                />
+            );
+        }
+    }
+
+    // The Poll Bar shows basic game info (and the variables grid someday)
+    function renderScoreBoard() {
         return (
-            <VitalPollBar
+            <ScoreBoard
                 masterGameDataObject={scryGameData}
                 setGameDataFunction={setScryGameData}
                 urlStart={scryServerURL}
@@ -155,19 +223,10 @@ export default function App(props) {
         );
     }
 
-    //Check if there's a join code
-    let isThereAJoinCode = false;
-    if (
-        Object.hasOwn(scryGameData, "joinCode") &&
-        scryGameData.joinCode.length > 0
-    ) {
-        isThereAJoinCode = true;
-    }
-
     //Actual rendering code
     return (
-        <>
-            {isThereAJoinCode ? renderVitalPollBar() : renderJoinCodeBox()}
+        <QueryClientProvider client={queryClient}>
+            {isThereAJoinCode ? renderScoreBoard() : renderJoinCodeBox()}
 
             {isActiveEventAvailable && theAnswerData.sentStatus != "sent"
                 ? renderEventArea()
@@ -175,6 +234,6 @@ export default function App(props) {
             {/*<div>
                 <pre>{JSON.stringify(activeEventData, null, 2)}</pre>
             </div>*/}
-        </>
+        </QueryClientProvider>
     );
 }

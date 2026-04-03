@@ -1,6 +1,7 @@
 export default function MultiChoice(props) {
     const optionsArray = props.data.options;
 
+    //Handles submission+ Puts response back "up the pipe" into the main object
     function handleSubmit(event) {
         event.preventDefault();
         const formEl = event.currentTarget;
