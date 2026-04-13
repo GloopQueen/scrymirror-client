@@ -10,7 +10,8 @@ export default function JoinCodeBox(props) {
         event.preventDefault();
         const formEl = event.currentTarget;
         const formData = new FormData(formEl);
-        const typedCode = formData.get("code");
+        let typedCode = formData.get("code");
+        typedCode = typedCode.toUpperCase();
         //console.log(typedCode);
         setCodeToTry(typedCode);
     }

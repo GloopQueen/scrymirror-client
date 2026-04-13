@@ -114,7 +114,8 @@ export default function App(props) {
         //setup outgoing words
 
         const outgoingData = theAnswerData;
-        theAnswerData.joinCode = scryGameData.joinCode;
+        outgoingData.joinCode = scryGameData.joinCode; //just tweaked this
+        outgoingData.playerID = scryGameData.playerID;
         delete outgoingData.sentStatus;
 
         const requestOptions = {
@@ -122,7 +123,7 @@ export default function App(props) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(outgoingData),
         };
-        fetch("http://glooppi:3000/scryGameData/", requestOptions)
+        fetch(scryServerURL + "scryGameData/", requestOptions)
             .then((res) => {
                 console.log(res.status); //TODO: turn this into actually warning when it was bad.
                 return res.json();

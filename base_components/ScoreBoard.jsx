@@ -28,7 +28,7 @@ export default function ScoreBoard(props) {
             }).then((res) => res.json()),
     });
 
-    //If data from the server is actually new, syncs it up with the "proper" game state.
+    //If data from the server is actually new, syncs it up with the "proper" game state
     useEffect(() => {
         if (typeof data !== "undefined") {
             const newGameData = {
