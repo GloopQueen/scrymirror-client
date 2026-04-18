@@ -66,6 +66,19 @@
 .MultiChoice label {
     display: inline-flex;
     align-items: center;
+    background-color: #600080;
+    margin: 6px;
+    padding: 5px;
+    font-size: 20px;
+    color: wheat;
+    border-radius: 10px;
+    width: 90%;
+}
+
+input:checked ~ label {
+    background-color: wheat;
+    font-weight: bold;
+    color: #600080;
 }
 
 .MultiChoice header {
