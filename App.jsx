@@ -35,6 +35,8 @@ export default function App(props) {
     //
 
     //get the server URL
+    // this should be in ".env" in the project's directory with something like "VITE_SCRY_URL=http://glooppi:3000/"
+    // except probably not EXACTLY that because that's the raspberry pi in my house
     const [scryServerURL, setScryServerURL] = React.useState(
         import.meta.env.VITE_SCRY_URL,
     );
