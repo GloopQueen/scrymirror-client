@@ -2,23 +2,29 @@
     box-sizing: border-box;
 }
 
+.wholeScoreboard {
+    background-color: #5c1cb0;
+    font-family: sans-serif;
+    max-width: 700px;
+}
+
 .VitalPollBar {
     display: flex;
-    background-color: DodgerBlue;
-    font-family: sans-serif;
 }
 
 .VitalPollBar div {
-    background-color: #f1f1f1;
-    margin: 6px;
+    background-color: #360275;
+    color: whitesmoke;
+    font-weight: bold;
+    margin: 4px;
     padding: 5px;
-    font-size: 15px;
-    border-radius: 10px;
+    font-size: 12px;
+    border-radius: 9px;
 }
 
 .JoinBox {
     display: flex;
-    background-color: DodgerBlue;
+    background-color: #5c1cb0;
     font-family: sans-serif;
 }
 
@@ -45,6 +51,7 @@
     background-color: #33004d;
     font-family: sans-serif;
     align-items: center;
+    max-width: 700px;
 }
 
 .MultiChoice div {
@@ -95,4 +102,39 @@ input:checked ~ label {
 .MultiChoice p {
     color: wheat;
     align-self: center;
+}
+
+.gridContainer {
+}
+
+.gridParent {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 3px;
+    height: 100px;
+}
+
+.gridDiv {
+    background-color: #f1f1f1;
+    margin: 2px;
+    padding: 2px;
+    font-size: 15px;
+    border-radius: 10px;
+    text-align: center;
+    vertical-align: center;
+}
+
+.gridDivLabel {
+    font-size: 10px;
+}
+
+.gridDivValue {
+    font-size: 22px;
+}
+
+.gridDivLabel1Line {
+}
+
+.gridDivValue1Line {
 }

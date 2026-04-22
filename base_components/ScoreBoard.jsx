@@ -12,7 +12,7 @@ export default function ScoreBoard(props) {
     const { isPending, isError, data, error } = useQuery({
         queryKey: ["repoData"],
         enabled: true,
-        refetchInterval: 4000,
+        refetchInterval: 1000,
         refetchIntervalInBackground: true,
         queryFn: () =>
             fetch(props.urlStart + "scryGameData/", {
@@ -41,85 +41,105 @@ export default function ScoreBoard(props) {
         }
     }, [data]);
 
-    //Update master info.
-    //Should only fire
-    /*if (typeof data !== "undefined") {
-        const newGameData = {
-            ...data,
-            joinCode: props.masterGameDataObject.joinCode,
-            playerID: props.masterGameDataObject.playerID,
-            gameOwnerName: props.masterGameDataObject.gameOwnerName,
-        };
-        props.setGameDataFunction(newGameData);
-    }*/
+    const scoreVarsTest = {
+        boatName: {
+            label: "Boat Name",
+            value: "The Hlungus",
+            row: 1,
+            column: 1,
+            width: 4,
+            height: 1,
+        },
+        averageStyle: {
+            label: "Average Style",
+            value: 4.12,
+            row: 2,
+            column: 1,
+            width: 1,
+            height: 2,
+        },
+        averageACAB: {
+            label: "Average ACAB",
+            value: 5.36,
+            row: 2,
+            column: 2,
+            width: 1,
+            height: 2,
+        },
+        averageRide: {
+            label: "Average Desire",
+            value: 3.82,
+            row: 2,
+            column: 3,
+            width: 1,
+            height: 2,
+        },
+    };
 
-    //const prevEventNum = props.masterGameDataObject.eventNum;
-    //const prevIsActive = props.masterGameDataObject.isActive;
+    //Reads the score information and maps it out for the grid.
+    function renderScores() {
+        const scoreVars = props.masterGameDataObject.scoreVars;
+        if (scoreVars == undefined) {
+            return null;
+        }
+        const scoreArray = Object.keys(scoreVars);
+        const scoreDivs = scoreArray.map((item) => {
+            console.log(item);
+            return (
+                <div
+                    className="gridDiv"
+                    key={item}
+                    style={{
+                        gridRow: `${scoreVars[item].row}/ span ${scoreVars[item].height}`,
+                        gridColumn: `${scoreVars[item].column}/ span ${scoreVars[item].width}`,
+                        backgroundColor: "#f1f1f1",
+                    }}
+                >
+                    {/*Grab a different CSS and add a break if the box is tall. */}
+                    <span
+                        className={
+                            scoreVars[item].height > 1
+                                ? "gridDivLabel"
+                                : "gridDivLabel1line"
+                        }
+                    >
+                        {scoreVars[item].label}
+                    </span>
 
-    //contin
-    /*
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-            fetch(props.urlStart + "scryGameData/", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    joinCode: props.joinCode,
-                    fullUpdate: false,
-                }),
-            })
-                .then((res) => res.json())
-                .then((res) => {
-                    //Check if it's actually new. I was spamming setting the state oops
-                    setData({ eventNum: res.eventNum, isActive: res.isActive });
-                    //console.log("in the loop data:");
-                    //console.log(data);
-                });
-            //.then((data) => {
-            //        setData(data);
-            //   });
-        }, 3000); // poll every 5 seconds
+                    {scoreVars[item].height > 1 ? <br /> : " : "}
 
-        return () => clearInterval(intervalId); // cleanup on unmount
-        }, []); */
-
-    /* if (
-        data.eventNum != props.masterGameDataObject.eventNum ||
-        data.isActive != props.masterGameDataObject.isActive
-    ) {
-        //Update the Game Data, make sure to carry over the joincode and playerID cuz otherwise itll get dropped
-        console.log(
-            "props.masterGameDataObject.eventNum:" +
-                props.masterGameDataObject.eventNum,
-        );
-        console.log("prevEventNum:" + data.eventNum);
-        console.log(
-            "props.masterGameDataObject.isActive:" +
-                props.masterGameDataObject.isActive,
-        );
-        console.log("prevIsActive:" + data.isActive);
-
-        const newGameData = {
-            ...data,
-            joinCode: props.masterGameDataObject.joinCode,
-            playerID: props.masterGameDataObject.playerID,
-            gameOwnerName: props.masterGameDataObject.gameOwnerName,
-        };
-        props.setGameDataFunction(newGameData);
-        }*/
+                    <span
+                        className={
+                            scoreVars[item].height > 1
+                                ? "gridDivValue"
+                                : "gridDivValue1line"
+                        }
+                    >
+                        {scoreVars[item].value}
+                    </span>
+                </div>
+            );
+        });
+        console.log(scoreDivs);
+        return <div className="gridParent">{scoreDivs}</div>;
+    }
 
     return (
         <>
-            <div className="VitalPollBar">
-                <div>Your Host: {props.masterGameDataObject.gameOwnerName}</div>
-                <div>Event Number: {props.masterGameDataObject.eventNum}</div>
-                <div>
-                    Event Active?{" "}
-                    {props.masterGameDataObject.isActive ? "Yes" : "No"}
+            <div className="wholeScoreboard">
+                <div className="VitalPollBar">
+                    <div>
+                        Your Host: {props.masterGameDataObject.gameOwnerName}
+                    </div>
+                    <div>
+                        Event Number: {props.masterGameDataObject.eventNum}
+                    </div>
+                    <div>
+                        Event Active?{" "}
+                        {props.masterGameDataObject.isActive ? "Yes" : "No"}
+                    </div>
                 </div>
+                {renderScores()}
             </div>
         </>
     );
