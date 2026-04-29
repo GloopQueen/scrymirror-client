@@ -92,7 +92,6 @@ export default function ScoreBoard(props) {
                     style={{
                         gridRow: `${scoreVars[item].row}/ span ${scoreVars[item].height}`,
                         gridColumn: `${scoreVars[item].column}/ span ${scoreVars[item].width}`,
-                        backgroundColor: "#f1f1f1",
                     }}
                 >
                     {/*Grab a different CSS and add a break if the box is tall. */}

@@ -13,7 +13,7 @@
 }
 
 .VitalPollBar div {
-    background-color: #360275;
+    background-color: #602cd1;
     color: whitesmoke;
     font-weight: bold;
     margin: 4px;
@@ -109,28 +109,29 @@ input:checked ~ label {
 
 .gridParent {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 3px;
-    height: 100px;
+    height: 120px;
 }
 
 .gridDiv {
-    background-color: #f1f1f1;
+    background-color: #360275;
+    color: whitesmoke;
     margin: 2px;
     padding: 2px;
-    font-size: 15px;
+    font-size: 21px;
     border-radius: 10px;
     text-align: center;
     vertical-align: center;
 }
 
 .gridDivLabel {
-    font-size: 10px;
+    font-size: 15px;
 }
 
 .gridDivValue {
-    font-size: 22px;
+    font-size: 28px;
 }
 
 .gridDivLabel1Line {
