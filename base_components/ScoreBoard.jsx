@@ -22,10 +22,16 @@ export default function ScoreBoard(props) {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    joinCode: props.joinCode,
-                    fullUpdate: false,
+                    joinCode: props.masterGameDataObject.joinCode,
+                    playerID: props.masterGameDataObject.playerID,
+                    fullUpdate: true,
                 }),
-            }).then((res) => res.json()),
+            }).then((res) => {
+                console.log(res.json()); //probably cleanupable
+                //YOU ERE HERE YOU WERE HERE YOU WERE
+                //You can get the data to barf to the console client-side, you just need to get it into the data structure here so it can be put in the "main" State.
+                return res.json();
+            }),
     });
 
     //If data from the server is actually new, syncs it up with the "proper" game state

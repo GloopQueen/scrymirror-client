@@ -44,7 +44,6 @@ export default function App(props) {
     //Data from the scryGameData endpoint. This is polled regularly and kicks off pretty much everything else.
     //
     //Crucially, there's an event number in here which kicks off grabbing the full Event.
-    //note to me, there's going to need to be an isEventActive variable on the scoreboard to handle joining at weird times.
     const [scryGameData, setScryGameData] = React.useState({
         eventNum: 0,
         isActive: false,
