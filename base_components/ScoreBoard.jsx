@@ -26,12 +26,20 @@ export default function ScoreBoard(props) {
                     playerID: props.masterGameDataObject.playerID,
                     fullUpdate: true,
                 }),
-            }).then((res) => {
-                console.log(res.json()); //probably cleanupable
-                //YOU ERE HERE YOU WERE HERE YOU WERE
-                //You can get the data to barf to the console client-side, you just need to get it into the data structure here so it can be put in the "main" State.
-                return res.json();
-            }),
+            })
+                .then((res) => {
+                    //console.log(res.json()); //probably cleanupable
+                    let response = res.json();
+                    //console.log("local:");
+                    //console.log(props.masterGameDataObject);
+                    //You can get the data to barf to the console client-side, you just need to get it into the data structure here so it can be put in the "main" State.
+                    return response;
+                })
+                .then((val) => {
+                    //console.log("remote:");
+                    //console.log(val);
+                    return val;
+                }),
     });
 
     //If data from the server is actually new, syncs it up with the "proper" game state

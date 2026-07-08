@@ -1,5 +1,5 @@
 export default function MultiChoice(props) {
-    const optionsArray = props.data.options;
+    const optionsArray = props.data.currentEvent.options;
 
     //Handles submission+ Puts response back "up the pipe" into the main object
     function handleSubmit(event) {
@@ -18,7 +18,9 @@ export default function MultiChoice(props) {
             <form method="post" onSubmit={handleSubmit}>
                 {/*this div generates the array of multichoice radio buttons */}
                 <div className="MultiChoice">
-                    <header key="thequestion">{props.data.questionText}</header>
+                    <header key="thequestion">
+                        {props.data.currentEvent.questionText}
+                    </header>
                     {optionsArray.map((option, currentIndex) => {
                         return (
                             <>

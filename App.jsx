@@ -41,9 +41,9 @@ export default function App(props) {
         import.meta.env.VITE_SCRY_URL,
     );
 
-    //Data from the scryGameData endpoint. This is polled regularly and kicks off pretty much everything else.
-    //
-    //Crucially, there's an event number in here which kicks off grabbing the full Event.
+    //Data from the scryGameData endpoint.
+    // This is polled regularly in the ScoreBoard widget, which passes actual changes up to here.
+    // This kicks off like, everything else.
     const [scryGameData, setScryGameData] = React.useState({
         eventNum: 0,
         isActive: false,
@@ -54,9 +54,11 @@ export default function App(props) {
     });
     //
     //data about the current (running) event, basically the JSON event from the server is here
+    // @TODO I THINK WE'RE KILLING HER ENTIRELY idk why this was caps. but yeah she's not got a point since everything should be in scryGameData
     const [activeEventData, setactiveEventData] = React.useState(null);
     //
     //If the event is "available" aka we have an interaction we want to show the user.
+    // @TODO: I think we're killing isActiveEventAvailable too, because again that data should be in setScryGameData.
     //This should be false
     // - When the user has completed the interaction and it's successfully reported back to the server.
     // - When the server says so.
@@ -77,7 +79,8 @@ export default function App(props) {
     /////////////USEEFFECT CITY
     //
     //Fetch the current Event data whenever the event number changes.
-    React.useEffect(() => {
+    //@TODO: Confirm this whole thing can go? Because right now the polling in the Scoreboard just gets ALL the data. The main app doesn't need to hit it again.
+    /*React.useEffect(() => {
         //TODO: this should probably check if the server says the Event is active, and bail if not.
         //TODO: This should bail if the event is 0. That way it ignores initializing.
         if (scryGameData.eventNum != 0 && scryGameData.isActive == true) {
@@ -105,9 +108,19 @@ export default function App(props) {
                     });
                 });
         }
-    }, [scryGameData.eventNum, scryGameData.isActive]);
+    }, [scryGameData.eventNum, scryGameData.isActive]); */
 
-    // Post the Answer whenever sentStatus changes (if ready)
+    //The Sent Answer un-latch:
+    //When an Answer is sent, the sent status changes to "sent" (surprise)
+    //This prevents the question/interaction UI from loading again.
+    //When "is event active" changes back to "no," the sent status should go back to preparing.
+    React.useEffect(() => {
+        if (scryGameData.isActive == false) {
+            setTheAnswerData({ ...theAnswerData, sentStatus: "preparing" });
+        }
+    }, [scryGameData.isActive]);
+
+    // Post the Answer whenever sentStatus changes (if "ready")
     React.useEffect(() => {
         if (theAnswerData.sentStatus != "ready") {
             return;
@@ -186,18 +199,19 @@ export default function App(props) {
 
     //Renders Event area beneath scoreboard. Future logic on different types of events will be in here
     function renderEventArea() {
-        if (activeEventData.type == "multiChoice") {
+        console.log("render event area.");
+        if (scryGameData.currentEvent.type == "multiChoice") {
             return (
                 <MultiChoice
-                    data={activeEventData}
+                    data={scryGameData}
                     valueResponseFunction={sendAnswer}
                 />
             );
         }
-        if (activeEventData.type == "multiMulti") {
+        if (scryGameData.currentEvent.type == "multiMulti") {
             return (
                 <MultiMulti
-                    data={activeEventData}
+                    data={scryGameData}
                     valueResponseFunction={sendAnswer}
                 />
             );
@@ -225,12 +239,15 @@ export default function App(props) {
         );
     }
 
+    console.log("Top Level:");
+    console.log(scryGameData);
+
     //Actual rendering code
     return (
         <QueryClientProvider client={queryClient}>
             {isThereAJoinCode ? renderScoreBoard() : renderJoinCodeBox()}
 
-            {isActiveEventAvailable && theAnswerData.sentStatus != "sent"
+            {scryGameData.isActive == true && theAnswerData.sentStatus != "sent"
                 ? renderEventArea()
                 : null}
             {/*<div>

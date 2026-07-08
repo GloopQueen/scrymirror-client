@@ -1,7 +1,7 @@
 import React from "react";
 export default function MultiMulti(props) {
-    const questionNameArray = props.data.options.questionNameArray;
-    const choiceArrays = props.data.options.choiceArrays;
+    const questionNameArray = props.data.currentEvent.options.questionNameArray;
+    const choiceArrays = props.data.currentEvent.options.choiceArrays;
 
     //The answer array will also serve as our counter via it's length.
     const [answerArray, setAnswerArray] = React.useState([]);
@@ -35,7 +35,9 @@ export default function MultiMulti(props) {
     if (answerArray.length >= questionNameArray.length) {
         return (
             <div className="MultiChoice">
-                <header key="thequestion">{props.data.questionText}</header>
+                <header key="thequestion">
+                    {props.data.currentEvent.questionText}
+                </header>
                 <p>All Answers Submitted!</p>
             </div>
         );
@@ -46,7 +48,9 @@ export default function MultiMulti(props) {
             <form method="post" onSubmit={handleSubmit} id="theForm">
                 {/*this div generates the array of multichoice radio buttons */}
                 <div className="MultiChoice">
-                    <header key="thequestion">{props.data.questionText}</header>
+                    <header key="thequestion">
+                        {props.data.currentEvent.questionText}
+                    </header>
                     <header key="thesubquestion">
                         {questionNameArray[answerArray.length]}
                     </header>
