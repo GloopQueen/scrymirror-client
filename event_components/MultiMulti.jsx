@@ -34,7 +34,7 @@ export default function MultiMulti(props) {
     //If for whatever reason, they've answered all the questions but data hasn't been sent yet, this'll show.
     if (answerArray.length >= questionNameArray.length) {
         return (
-            <div className="MultiChoice">
+            <div className="MultiChoice" key="itComplainedAboutNoKeyOne">
                 <header key="thequestion">
                     {props.data.currentEvent.questionText}
                 </header>
@@ -47,7 +47,7 @@ export default function MultiMulti(props) {
         <>
             <form method="post" onSubmit={handleSubmit} id="theForm">
                 {/*this div generates the array of multichoice radio buttons */}
-                <div className="MultiChoice">
+                <div className="MultiChoice" key="itComplainedAboutNoKeyTwo">
                     <header key="thequestion">
                         {props.data.currentEvent.questionText}
                     </header>
@@ -69,6 +69,7 @@ export default function MultiMulti(props) {
                                             name="eventChoice"
                                             value={option.value}
                                             id={option.value}
+                                            key={option.value}
                                         />
 
                                         {option.label}
