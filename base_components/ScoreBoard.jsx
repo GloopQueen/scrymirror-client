@@ -45,6 +45,7 @@ export default function ScoreBoard(props) {
     //If data from the server is actually new, syncs it up with the "proper" game state
     useEffect(() => {
         if (typeof data !== "undefined") {
+            console.log(data);
             const newGameData = {
                 ...data,
                 joinCode: props.masterGameDataObject.joinCode,
@@ -137,20 +138,25 @@ export default function ScoreBoard(props) {
         return <div className="gridParent">{scoreDivs}</div>;
     }
 
+    function renderTeamName() {
+        if (Object.hasOwn(props.masterGameDataObject, "yourTeamName")) {
+            return (
+                <div>👤 {props.masterGameDataObject.yourTeamName} </div>
+          )
+      }
+    }
+
     return (
         <>
             <div className="wholeScoreboard">
                 <div className="VitalPollBar">
                     <div>
-                        Your Host: {props.masterGameDataObject.gameOwnerName}
+                        Host: {props.masterGameDataObject.gameOwnerName}
                     </div>
                     <div>
-                        Event Number: {props.masterGameDataObject.eventNum}
+                        Event #{props.masterGameDataObject.eventNum}, {props.masterGameDataObject.isActive ? "Active" : "Not Active"}.
                     </div>
-                    <div>
-                        Event Active?{" "}
-                        {props.masterGameDataObject.isActive ? "Yes" : "No"}
-                    </div>
+                    {renderTeamName()}
                 </div>
                 {renderScores()}
             </div>

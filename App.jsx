@@ -3,6 +3,7 @@ import MultiMulti from "./event_components/MultiMulti";
 import MultiChoice from "./event_components/MultiChoice";
 import ScoreBoard from "./base_components/ScoreBoard";
 import JoinCodeBox from "./base_components/JoinCodeBox";
+import MessageBox from "./event_components/MessageBox";
 import {
     QueryClientProvider,
     QueryClient,
@@ -197,25 +198,36 @@ export default function App(props) {
         return () => clearInterval(intervalId); // cleanup on unmount
     }, [scryGameData.joinCode]);*/
 
-    //Renders Event area beneath scoreboard. Future logic on different types of events will be in here
+    //Renders Event area beneath scoreboard. Logic for different types of Events is here
     function renderEventArea() {
-        console.log("render event area.");
-        if (scryGameData.currentEvent.type == "multiChoice") {
-            return (
-                <MultiChoice
-                    data={scryGameData}
-                    valueResponseFunction={sendAnswer}
-                />
-            );
+        //console.log("render event area.");
+
+        //Summon the MessageBox if something not your turn is currently running
+        if (Object.hasOwn(scryGameData, "notYourTurn")) {
+            console.log("not your turn.");
+            return (<MessageBox message={"Sit tight! Another participant is answering a question."} />);
         }
-        if (scryGameData.currentEvent.type == "multiMulti") {
-            return (
-                <MultiMulti
-                    data={scryGameData}
-                    valueResponseFunction={sendAnswer}
-                />
-            );
+
+        //Check if there's current Event data and if so show the relevant type
+        if (Object.hasOwn(scryGameData, "currentEvent")) {
+          if (scryGameData.currentEvent.type == "multiChoice") {
+              return (
+                  <MultiChoice
+                      data={scryGameData}
+                      valueResponseFunction={sendAnswer}
+                  />
+              );
+          }
+          if (scryGameData.currentEvent.type == "multiMulti") {
+              return (
+                  <MultiMulti
+                      data={scryGameData}
+                      valueResponseFunction={sendAnswer}
+                  />
+              );
+          }
         }
+
     }
 
     // The Poll Bar shows basic game info (and the variables grid someday)
@@ -239,6 +251,7 @@ export default function App(props) {
         );
     }
 
+    //This can probably get deleted angelcakes girlypop
     console.log("Top Level:");
     console.log(scryGameData);
 

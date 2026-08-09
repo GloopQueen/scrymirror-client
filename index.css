@@ -45,6 +45,35 @@
     width: 70px;
 }
 
+.MessageBox {
+    display: flex;
+    flex-direction: column;
+    background-color: #33004d;
+    font-family: sans-serif;
+    align-items: center;
+    max-width: 700px;
+}
+
+.MessageBox div {
+    background-color: #600080;
+    margin: 6px;
+    padding: 5px;
+    font-size: 20px;
+    color: wheat;
+    border-radius: 10px;
+    width: 90%;
+}
+.MessageBox span {
+    background-color: #600080;
+    margin: 6px;
+    padding: 5px;
+    font-size: 15px;
+    color: wheat;
+    border-radius: 10px;
+    width: 90%;
+}
+
+
 .MultiChoice {
     display: flex;
     flex-direction: column;
@@ -109,7 +138,7 @@ input:checked ~ label {
 
 .gridParent {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 3px;
     height: 120px;
@@ -120,14 +149,14 @@ input:checked ~ label {
     color: whitesmoke;
     margin: 2px;
     padding: 2px;
-    font-size: 21px;
+    font-size: 18px;
     border-radius: 10px;
     text-align: center;
     vertical-align: center;
 }
 
 .gridDivLabel {
-    font-size: 15px;
+    font-size: 12px;
 }
 
 .gridDivValue {

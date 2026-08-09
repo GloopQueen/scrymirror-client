@@ -54,17 +54,21 @@ export default function JoinCodeBox(props) {
                     /* const newRandomPlayerID = Math.floor(
                         Math.random() * 100000,
                     ); */
+                    //Circumsize the team code, if there was one.
+                    const shortCode = codeToTry.split("-");
+                    //oh it's [0]
+
                     //Create new game state info to pass up to the main App.jsx
                     const newGameData = {
                         ...props.masterGameDataObject,
                         playerID: res.playerID,
                         gameOwnerName: res.gameOwnerName,
-                        joinCode: codeToTry,
+                        joinCode: shortCode[0],
                     };
                     //Save to local storage
                     const newLocalGameDeets = {
                         playerID: res.playerID,
-                        joinCode: codeToTry,
+                        joinCode: shortCode[0],
                     };
                     localStorage.setItem(
                         "scryExistingGame",
