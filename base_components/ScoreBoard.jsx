@@ -6,7 +6,9 @@ export default function ScoreBoard(props) {
     const [dataToCompare, setDataToCompare] = useState({
         eventNum: 0,
         isActive: false,
-    });
+    }); //@todo probably delete
+
+    const [oldScoreVars, setOldScoreVars] = useState({}); //old score vars are copied into here in case the server is being rude
 
     //Polling tool
     const { isPending, isError, data, error } = useQuery({
@@ -56,6 +58,16 @@ export default function ScoreBoard(props) {
         }
     }, [data]);
 
+
+    //If there's valid scoreboard data, it saves a backup in case the server is pooping its pands. Leaving the typeof
+    useEffect(() => {
+        //Check that there even is scoreVars and it's not empty
+        if (Object.hasOwn(props.masterGameDataObject, "scoreVars") && Object.keys(props.masterGameDataObject.scoreVars).length != 0) {
+            setOldScoreVars(props.masterGameDataObject.scoreVars);
+            console.log("backing up scorevars.");
+        }
+    },[props.masterGameDataObject])
+
     const scoreVarsTest = {
         boatName: {
             label: "Boat Name",
@@ -91,12 +103,29 @@ export default function ScoreBoard(props) {
         },
     };
 
+
+
+
     //Reads the score information and maps it out for the grid.
     function renderScores() {
-        const scoreVars = props.masterGameDataObject.scoreVars;
-        if (scoreVars == undefined) {
-            return null;
+        let scoreVars = {};
+        //if there's an issue with the scorevars, load the backup, otherwise use the real ones
+        if (props.masterGameDataObject.scoreVars == undefined) {
+            //Check if oldscorevars is totally empty and return a dummy empty scoreboard if so
+            console.log("Falling back to oldscorevars because there's no new one rn.");
+            if (Object.keys(oldScoreVars).length === 0) {
+                //Return a blank grid
+                console.log("returning a blank gridparent because there's no old data.");
+                return (
+                    <div className="gridParent"></div>
+              )
+            }
+
+        } else {
+            console.log("using regular real scorevars.");
+            scoreVars = props.masterGameDataObject.scoreVars;
         }
+        console.log("running for real lol");
         const scoreArray = Object.keys(scoreVars);
         const scoreDivs = scoreArray.map((item) => {
             console.log(item);
@@ -134,7 +163,7 @@ export default function ScoreBoard(props) {
                 </div>
             );
         });
-        console.log(scoreDivs);
+        //console.log(scoreDivs);
         return <div className="gridParent">{scoreDivs}</div>;
     }
 
